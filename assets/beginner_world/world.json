@@ -1,0 +1,26 @@
+{
+  "world_id": "beginner_human_world",
+  "name": "勇者世界·凡俗层",
+  "description": "以普通人类社会为基准的可复用世界框架。当前只开放新手县城。",
+  "historical_style": "抽象化中国明朝末期",
+  "historical_canon": false,
+  "human_baseline": true,
+  "extraordinary": {
+    "enabled": false,
+    "system_id": null,
+    "description": "超凡力量接口占位。当前世界不允许任何超自然能力直接生效。"
+  },
+  "rules": [
+    "当前世界以普通人类现实能力为基准。",
+    "时代技术表现抽象参考中国明朝末期，但不是严格历史复原。",
+    "当前 Scene 只开放澄源县城。",
+    "当前世界不启用超凡力量。",
+    "官身份角色不可被玩家作为预设角色选择。"
+  ],
+  "layer": "L1",
+  "mutability": "configurable",
+  "constitution": {
+    "skill_id": "world_core_constitution",
+    "required": true
+  }
+}

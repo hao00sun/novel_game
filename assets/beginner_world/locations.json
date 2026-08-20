@@ -1,0 +1,131 @@
+{
+  "locations": [
+    {
+      "id": "east_gate",
+      "name": "东门",
+      "type": "gate",
+      "description": "县城东门，人流不算密集，城门旁有告示与歇脚石。",
+      "tags": [
+        "交通",
+        "告示",
+        "陌生人"
+      ],
+      "aliases": [
+        "东门",
+        "城门",
+        "东城门"
+      ]
+    },
+    {
+      "id": "market",
+      "name": "市集",
+      "type": "market",
+      "description": "县城最热闹的地方，米粮、布匹、杂货和小吃摊集中在这里。",
+      "tags": [
+        "交易",
+        "消息",
+        "人群"
+      ],
+      "aliases": [
+        "市集",
+        "集市",
+        "市场"
+      ]
+    },
+    {
+      "id": "inn",
+      "name": "顺来客栈",
+      "type": "inn",
+      "description": "供行商和赶路人歇脚的客栈，一楼兼卖酒菜。",
+      "tags": [
+        "住宿",
+        "消息",
+        "外来人"
+      ],
+      "aliases": [
+        "客栈",
+        "顺来客栈"
+      ]
+    },
+    {
+      "id": "herbal_shop",
+      "name": "济生药铺",
+      "type": "shop",
+      "description": "小县城中颇有口碑的药铺，兼售常见药材。",
+      "tags": [
+        "医药",
+        "交易"
+      ],
+      "aliases": [
+        "药铺",
+        "济生药铺",
+        "药店"
+      ]
+    },
+    {
+      "id": "smithy",
+      "name": "赵家铁铺",
+      "type": "workshop",
+      "description": "打农具、菜刀和修理铁器的铺子，火炉常年不灭。",
+      "tags": [
+        "锻造",
+        "工具",
+        "劳作"
+      ],
+      "aliases": [
+        "铁铺",
+        "铁匠铺",
+        "赵家铁铺"
+      ]
+    },
+    {
+      "id": "tea_stall",
+      "name": "柳娘茶摊",
+      "type": "stall",
+      "description": "靠近市集的小茶摊，消息往往比茶水更值钱。",
+      "tags": [
+        "消息",
+        "社交"
+      ],
+      "aliases": [
+        "茶摊",
+        "柳娘茶摊"
+      ]
+    },
+    {
+      "id": "temple",
+      "name": "城隍庙",
+      "type": "temple",
+      "description": "县民祭祀与求平安的地方，也是节庆时的重要公共场所。",
+      "tags": [
+        "信俗",
+        "公共空间"
+      ],
+      "aliases": [
+        "城隍庙",
+        "庙"
+      ]
+    },
+    {
+      "id": "yamen_square",
+      "name": "县衙前广场",
+      "type": "government_exterior",
+      "description": "县衙门前的空地，可见衙役出入，但县衙内部暂未开放。",
+      "tags": [
+        "官府",
+        "秩序",
+        "告示"
+      ],
+      "aliases": [
+        "县衙",
+        "县衙前",
+        "县衙前广场",
+        "衙门"
+      ]
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition"
+  }
+}

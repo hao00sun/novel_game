@@ -1,0 +1,29 @@
+{
+  "scene_id": "chengyuan_county_beginner_scene",
+  "name": "澄源县·新手县城",
+  "scope_type": "bounded_town",
+  "world_id": "beginner_human_world",
+  "description": "一座抽象化明末风格的小县城。当前所有交互均限制在县城范围内。",
+  "entry_location": "east_gate",
+  "allowed_location_ids": [
+    "east_gate",
+    "market",
+    "inn",
+    "herbal_shop",
+    "smithy",
+    "tea_stall",
+    "temple",
+    "yamen_square"
+  ],
+  "boundaries": [
+    "玩家不能离开县城进入外部世界。",
+    "县衙内部暂未开放，只能在县衙前广场活动。",
+    "当前不模拟战争、国家政治和跨区域经济。",
+    "当前不提供超凡力量。",
+    "普通 NPC 不会因为玩家一句话就改变核心身份或事实。"
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition"
+  }
+}

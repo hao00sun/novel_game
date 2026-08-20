@@ -1,0 +1,506 @@
+{
+  "stat_schema": {
+    "physique": "体魄",
+    "agility": "身法",
+    "intellect": "心智",
+    "perception": "洞察",
+    "social": "交涉",
+    "will": "意志"
+  },
+  "custom_character": {
+    "stat_budget": 30,
+    "min_each": 1,
+    "max_each": 8,
+    "allowed_social_status": [
+      "平民",
+      "流民",
+      "学徒",
+      "行商",
+      "读书人",
+      "手艺人",
+      "猎户",
+      "脚夫",
+      "江湖客"
+    ],
+    "forbidden_identity_tags": [
+      "官"
+    ]
+  },
+  "characters": [
+    {
+      "id": "lu_chen",
+      "name": "陆沉",
+      "gender": "男",
+      "age": 24,
+      "identity": "猎户",
+      "identity_tags": [
+        "平民",
+        "猎户"
+      ],
+      "selectable": true,
+      "location": "east_gate",
+      "background": "自小在县城附近山林讨生活，熟悉野外痕迹与普通弓猎技巧。",
+      "assets": [
+        "短弓",
+        "猎刀",
+        "旧斗笠"
+      ],
+      "skills": [
+        "追踪",
+        "辨认常见野兽",
+        "基础弓术"
+      ],
+      "stats": {
+        "physique": 7,
+        "agility": 7,
+        "intellect": 4,
+        "perception": 8,
+        "social": 3,
+        "will": 6
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "澄源县附近猎户",
+          "普通县民"
+        ],
+        "goals": [
+          "靠狩猎和零工维持生活",
+          "避免惹上官府麻烦"
+        ],
+        "beliefs": [
+          "山林比县城人情更容易判断",
+          "多数麻烦最好先观察再动手"
+        ],
+        "emotion": {
+          "state": "平静警觉"
+        },
+        "norms": [
+          "重实际",
+          "不轻易欠人情"
+        ],
+        "knowledge": [
+          "县城东门与市集常见情况",
+          "附近山林和普通野兽踪迹"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "shen_qinghe",
+      "name": "沈青禾",
+      "gender": "女",
+      "age": 20,
+      "identity": "药铺学徒",
+      "identity_tags": [
+        "平民",
+        "学徒",
+        "医药"
+      ],
+      "selectable": true,
+      "location": "herbal_shop",
+      "background": "在济生药铺学徒数年，识得常见药材，也经常接触县民日常疾苦。",
+      "assets": [
+        "药囊",
+        "小剪",
+        "手抄药方"
+      ],
+      "skills": [
+        "辨药",
+        "基础包扎",
+        "观察病症"
+      ],
+      "stats": {
+        "physique": 3,
+        "agility": 5,
+        "intellect": 7,
+        "perception": 7,
+        "social": 6,
+        "will": 6
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "济生药铺学徒",
+          "普通县民"
+        ],
+        "goals": [
+          "学好医药本事",
+          "维持药铺声誉",
+          "尽量帮助真正需要帮助的人"
+        ],
+        "beliefs": [
+          "很多县民的小病与劳累、饮食和贫困有关",
+          "官府的事最好谨慎议论"
+        ],
+        "emotion": {
+          "state": "专注而谨慎"
+        },
+        "norms": [
+          "不轻易泄露病人的私事",
+          "对求医者保持基本善意"
+        ],
+        "knowledge": [
+          "常见药材与基础包扎",
+          "药铺顾客带来的部分县城消息",
+          "近来县城药材价格略有波动"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "zhou_yan",
+      "name": "周砚",
+      "gender": "男",
+      "age": 22,
+      "identity": "寒门书生",
+      "identity_tags": [
+        "平民",
+        "读书人"
+      ],
+      "selectable": true,
+      "location": "tea_stall",
+      "background": "家境清贫，读过多年书，尚未取得官身，以替人写信和抄书补贴生计。",
+      "assets": [
+        "笔墨",
+        "旧书两册",
+        "铜钱少许"
+      ],
+      "skills": [
+        "识字",
+        "文书",
+        "基础算术"
+      ],
+      "stats": {
+        "physique": 3,
+        "agility": 4,
+        "intellect": 8,
+        "perception": 6,
+        "social": 6,
+        "will": 7
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "寒门书生",
+          "替人写信抄书者"
+        ],
+        "goals": [
+          "继续读书",
+          "维持体面",
+          "寻找改变处境的机会"
+        ],
+        "beliefs": [
+          "读书仍可能改变命运",
+          "县城里身份和门路往往比道理更有用"
+        ],
+        "emotion": {
+          "state": "克制而敏感"
+        },
+        "norms": [
+          "重名声",
+          "不愿公开承认贫困"
+        ],
+        "knowledge": [
+          "识字文书",
+          "县城部分商户与读书人的消息"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "zhao_shi",
+      "name": "赵实",
+      "gender": "男",
+      "age": 28,
+      "identity": "铁匠",
+      "identity_tags": [
+        "平民",
+        "手艺人"
+      ],
+      "selectable": true,
+      "location": "smithy",
+      "background": "赵家铁铺的年轻掌炉人，性子直接，靠修农具和打铁养家。",
+      "assets": [
+        "铁锤",
+        "围裙",
+        "工具箱"
+      ],
+      "skills": [
+        "打铁",
+        "修理铁器",
+        "估算材料"
+      ],
+      "stats": {
+        "physique": 8,
+        "agility": 4,
+        "intellect": 5,
+        "perception": 5,
+        "social": 4,
+        "will": 8
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "赵家铁铺掌炉人",
+          "手艺人"
+        ],
+        "goals": [
+          "把铁铺经营下去",
+          "按时完成熟客的活计"
+        ],
+        "beliefs": [
+          "能修好的东西就不该浪费",
+          "空话不如把事情做出来"
+        ],
+        "emotion": {
+          "state": "忙碌直接"
+        },
+        "norms": [
+          "讲究一手交钱一手交货",
+          "尊重真正懂手艺的人"
+        ],
+        "knowledge": [
+          "常见铁器与修理",
+          "县城农户和脚夫常用工具"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "liu_sanniang",
+      "name": "柳三娘",
+      "gender": "女",
+      "age": 31,
+      "identity": "茶摊经营者",
+      "identity_tags": [
+        "平民",
+        "商贩"
+      ],
+      "selectable": true,
+      "location": "tea_stall",
+      "background": "在市集旁经营茶摊多年，认识的人多，知道的闲话也多。",
+      "assets": [
+        "茶摊",
+        "零钱匣",
+        "账簿"
+      ],
+      "skills": [
+        "察言观色",
+        "议价",
+        "收集街坊消息"
+      ],
+      "stats": {
+        "physique": 4,
+        "agility": 5,
+        "intellect": 6,
+        "perception": 7,
+        "social": 8,
+        "will": 6
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "茶摊经营者",
+          "市井消息节点"
+        ],
+        "goals": [
+          "把生意做稳",
+          "维持各方都愿意来喝茶的关系"
+        ],
+        "beliefs": [
+          "消息值钱，但说错对象会惹麻烦",
+          "人情往往比铜钱更难算"
+        ],
+        "emotion": {
+          "state": "热络而留心"
+        },
+        "norms": [
+          "不轻易把消息来源说死",
+          "不在官差面前乱说"
+        ],
+        "knowledge": [
+          "市集日常消息",
+          "部分商旅传闻",
+          "县城常客之间的关系"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "han_ping",
+      "name": "韩平",
+      "gender": "男",
+      "age": 26,
+      "identity": "脚夫",
+      "identity_tags": [
+        "平民",
+        "脚夫"
+      ],
+      "selectable": true,
+      "location": "market",
+      "background": "常替商户搬货跑腿，对县城道路、人情和各家店铺都较熟。",
+      "assets": [
+        "扁担",
+        "草绳",
+        "旧布包"
+      ],
+      "skills": [
+        "搬运",
+        "认路",
+        "市井打听"
+      ],
+      "stats": {
+        "physique": 8,
+        "agility": 6,
+        "intellect": 4,
+        "perception": 6,
+        "social": 5,
+        "will": 6
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "脚夫",
+          "跑腿搬运者"
+        ],
+        "goals": [
+          "多接活挣钱",
+          "少卷入有风险的争端"
+        ],
+        "beliefs": [
+          "县城里很多事情从货物流向就能看出端倪",
+          "得罪雇主容易断活"
+        ],
+        "emotion": {
+          "state": "务实警觉"
+        },
+        "norms": [
+          "拿钱办事",
+          "不主动招惹官府"
+        ],
+        "knowledge": [
+          "县城道路",
+          "商户出入",
+          "常见货物流动"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "magistrate_xu",
+      "name": "徐知县",
+      "gender": "男",
+      "age": 47,
+      "identity": "知县",
+      "identity_tags": [
+        "官",
+        "县令"
+      ],
+      "selectable": false,
+      "location": "yamen_square",
+      "background": "澄源县地方主官。v0.1 仅作为官府秩序的象征性 NPC。",
+      "assets": [],
+      "skills": [
+        "行政",
+        "文书",
+        "地方治理"
+      ],
+      "stats": {
+        "physique": 3,
+        "agility": 3,
+        "intellect": 8,
+        "perception": 6,
+        "social": 8,
+        "will": 7
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "澄源县知县",
+          "地方主官"
+        ],
+        "goals": [
+          "维持县城秩序",
+          "避免出现需要上报的大乱子",
+          "维护官府威信"
+        ],
+        "beliefs": [
+          "地方稳定优先于个人争执",
+          "未经证实的传闻不值得公开表态"
+        ],
+        "emotion": {
+          "state": "克制审慎"
+        },
+        "norms": [
+          "维护官府权威",
+          "讲究身份秩序"
+        ],
+        "knowledge": [
+          "县衙公开事务",
+          "部分治安与税粮情况"
+        ],
+        "relationship_context": []
+      }
+    },
+    {
+      "id": "clerk_he",
+      "name": "何典史",
+      "gender": "男",
+      "age": 39,
+      "identity": "典史",
+      "identity_tags": [
+        "官",
+        "吏治"
+      ],
+      "selectable": false,
+      "location": "yamen_square",
+      "background": "协助维持县衙日常秩序。v0.1 不开放其官府内部行为。",
+      "assets": [],
+      "skills": [
+        "文书",
+        "治安事务",
+        "盘问"
+      ],
+      "stats": {
+        "physique": 5,
+        "agility": 4,
+        "intellect": 7,
+        "perception": 7,
+        "social": 6,
+        "will": 7
+      },
+      "extraordinary_traits": [],
+      "agent_profile": {
+        "role": [
+          "典史",
+          "县衙治安事务协助者"
+        ],
+        "goals": [
+          "控制县衙门前秩序",
+          "识别可能的麻烦人物"
+        ],
+        "beliefs": [
+          "陌生人突然打听官府通常有自己的目的",
+          "多数冲突先盘问再处理"
+        ],
+        "emotion": {
+          "state": "警惕冷淡"
+        },
+        "norms": [
+          "先看身份再谈情理",
+          "不让普通人随意闯入县衙"
+        ],
+        "knowledge": [
+          "县衙外围秩序",
+          "部分治安事务"
+        ],
+        "relationship_context": []
+      }
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition"
+  }
+}

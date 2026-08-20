@@ -1,0 +1,9 @@
+[project]
+name = "novel-world"
+version = "0.3.0"
+description = "Asset-driven interactive narrative world with API-powered intent, character and narration agents."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,28 @@
+{
+  "skill_id": "world_core_constitution",
+  "layer": "L0",
+  "mutability": "immutable",
+  "version": "0.3.0",
+  "principles": [
+    "world_state_is_single_source_of_truth",
+    "fact_belief_memory_are_separate",
+    "player_action_freedom_not_result_freedom",
+    "npc_autonomy",
+    "agent_proposes_resolver_validates_state_manager_commits",
+    "character_knowledge_boundary",
+    "causal_explainability",
+    "social_impact_requires_escalated_validation",
+    "behavior_attractors_are_priors_not_hard_choices",
+    "narrator_has_no_state_write_permission"
+  ],
+  "llm_guardrails": [
+    "World State 是唯一事实源；模型输出本身不是事实。",
+    "玩家拥有行动自由，但没有结果自由。",
+    "Fact、Belief、Memory、Desired Outcome 必须分离。",
+    "NPC 拥有自主性，玩家不能直接决定 NPC 的思想、情绪或服从。",
+    "角色只能依据自身可获得的信息行动。",
+    "Agent 只能提出 Proposal；Resolver 判断；State Manager 才能 Commit。",
+    "所有新事实必须具有可解释的因果来源。",
+    "Narrator 只能描述已确认 Outcome，不得创造新事实。"
+  ]
+}
