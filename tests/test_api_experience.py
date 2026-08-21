@@ -1,14 +1,14 @@
 import unittest
 from pathlib import Path
 
-from novel_world.asset_loader import AssetLoader
-from novel_world.character_factory import CharacterFactory
-from novel_world.llm import MockProvider
-from novel_world.intent_agent import IntentAgent
-from novel_world.character_agent import CharacterAgent
-from novel_world.tools import ToolRegistry
-from novel_world.resolver import WorldResolver
-from novel_world.state_manager import StateManager
+from novel_world.assets.loader import AssetLoader
+from novel_world.characters.factory import CharacterFactory
+from novel_world.infrastructure.llm import MockProvider
+from novel_world.agents.intent import IntentAgent
+from novel_world.agents.character import CharacterAgent
+from novel_world.world.tools import ToolRegistry
+from novel_world.world.resolver import WorldResolver
+from novel_world.world.state_manager import StateManager
 
 
 ROOT = Path(__file__).resolve().parents[1]

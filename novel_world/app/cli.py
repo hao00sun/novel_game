@@ -1,29 +1,9 @@
 from __future__ import annotations
 
 import json
-import os
-from pathlib import Path
 
-from .constitution import WorldConstitution
-from .asset_loader import AssetLoader
-from .character_factory import CharacterFactory, STAT_KEYS
-from .llm import MockProvider, OpenAICompatibleProvider
-from .intent_agent import IntentAgent
-from .character_agent import CharacterAgent
-from .tools import ToolRegistry
-from .resolver import WorldResolver
-from .state_manager import StateManager
-from .storage import JsonStore
-from .narrator import Narrator
-from .engine import GameEngine
-from .config import load_env_file
-
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-CONSTITUTION_DIR = PROJECT_ROOT / "skills" / "world_core"
-ASSET_DIR = PROJECT_ROOT / "assets" / "beginner_world"
-SAVE_PATH = PROJECT_ROOT / ".runtime" / "save.json"
-ENV_PATH = PROJECT_ROOT / ".env"
+from ..characters.factory import CharacterFactory, STAT_KEYS
+from .bootstrap import SAVE_PATH, build_engine
 
 
 STAT_ZH = {
@@ -34,36 +14,6 @@ STAT_ZH = {
     "social": "交涉",
     "will": "意志",
 }
-
-
-def build_llm():
-    load_env_file(ENV_PATH)
-    provider = os.getenv("NOVEL_WORLD_PROVIDER", "mock").lower().strip()
-
-    if provider in {"api", "openai_compatible"}:
-        return OpenAICompatibleProvider.from_env()
-
-    return MockProvider()
-
-
-def build_engine():
-    constitution = WorldConstitution(CONSTITUTION_DIR)
-    assets = AssetLoader(ASSET_DIR)
-    llm = build_llm()
-    tools = ToolRegistry(assets)
-
-    engine = GameEngine(
-        constitution=constitution,
-        assets=assets,
-        intent_agent=IntentAgent(assets, llm, constitution),
-        character_agent=CharacterAgent(assets, llm, constitution),
-        resolver=WorldResolver(assets, tools),
-        state_manager=StateManager(),
-        narrator=Narrator(assets, llm, constitution),
-        store=JsonStore(SAVE_PATH),
-    )
-
-    return constitution, assets, llm, engine
 
 
 def print_character(c):

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from .llm import MockProvider
+from ..infrastructure.llm import MockProvider
 from .prompts import NARRATOR_SYSTEM
 
 

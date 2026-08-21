@@ -1,10 +1,10 @@
 import unittest
 from pathlib import Path
 
-from novel_world.constitution import WorldConstitution
-from novel_world.asset_loader import AssetLoader
-from novel_world.models import Outcome
-from novel_world.state_manager import StateManager
+from novel_world.world.constitution import WorldConstitution
+from novel_world.assets.loader import AssetLoader
+from novel_world.world.models import Outcome
+from novel_world.world.state_manager import StateManager
 
 
 ROOT = Path(__file__).resolve().parents[1]

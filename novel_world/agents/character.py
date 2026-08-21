@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 
-from .llm import MockProvider
-from .models import CharacterProposal
+from ..infrastructure.llm import MockProvider
+from ..world.models import CharacterProposal
 from .prompts import CHARACTER_SYSTEM
 
 

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 
-from .llm import MockProvider
-from .models import Intent
+from ..infrastructure.llm import MockProvider
+from ..world.models import Intent
 from .prompts import INTENT_SYSTEM
 
 
