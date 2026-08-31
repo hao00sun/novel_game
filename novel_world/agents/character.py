@@ -6,6 +6,8 @@
 5、当前location仍以玩家为中心，未考虑“时间线流动”
 6：角色对于世界信息的获取尚很毛糙
 7：角色的回应仍处于测试阶段
+
+另：agent应该作为一个怎样的生态位起作用？
 '''
 
 from __future__ import annotations

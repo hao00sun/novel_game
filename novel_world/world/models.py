@@ -1,7 +1,18 @@
-from __future__ import annotations
+'''
+本文件决定各组件之间用什么格式传递信息，目前只定义了三个核心数据结构：Intent、CharacterProposal、Outcome
+1、可能传递的信息不够丰富？
+2、可能数据接口种类不够？
+3、“裁决”有些可能不是单纯的bool决定
+4、当前的event不够用
+5、没有time模型
 
+
+'''
+
+from __future__ import annotations
 from dataclasses import dataclass, asdict, field
 from typing import Any
+
 
 
 @dataclass

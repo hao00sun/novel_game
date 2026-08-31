@@ -1,3 +1,10 @@
+'''
+目前只是一个工具函数集合，还不是工具注册表
+tool应该作为一个怎样的生态位起作用？
+
+'''
+
+
 from __future__ import annotations
 
 

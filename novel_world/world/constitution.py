@@ -1,3 +1,10 @@
+'''
+确保L0不被改变
+
+后续发展继续保持：宪法的注册、读取、版本、兼容性、原则声明与校验入口
+
+'''
+
 from __future__ import annotations
 
 import json
