@@ -52,6 +52,7 @@ class Outcome:
     events: list[str] = field(default_factory=list)
     npc_proposal: dict[str, Any] | None = None
     rejected_claims: list[str] = field(default_factory=list)
+    skill_checks: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self):
         return asdict(self)

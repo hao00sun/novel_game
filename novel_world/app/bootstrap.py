@@ -7,6 +7,7 @@ from ..agents.character import CharacterAgent
 from ..agents.intent import IntentAgent
 from ..agents.narrator import Narrator
 from ..assets.loader import AssetLoader
+from ..characters.skills import CharacterSkillSystem
 from ..engine import GameEngine
 from ..infrastructure.config import load_env_file
 from ..infrastructure.llm import MockProvider, OpenAICompatibleProvider
@@ -41,13 +42,14 @@ def build_engine():
     assets = AssetLoader(ASSET_DIR)
     llm = build_llm()
     tools = ToolRegistry(assets)
+    skill_system = CharacterSkillSystem(assets.skills())
 
     engine = GameEngine(
         constitution=constitution,
         assets=assets,
         intent_agent=IntentAgent(assets, llm, constitution),
         character_agent=CharacterAgent(assets, llm, constitution),
-        resolver=WorldResolver(assets, tools),
+        resolver=WorldResolver(assets, tools, skill_system),
         state_manager=StateManager(),
         narrator=Narrator(assets, llm, constitution),
         store=JsonStore(SAVE_PATH),

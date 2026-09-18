@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Engine 负责“流程”，不负责“世界细节”。
 
@@ -481,8 +483,6 @@ GameEngine 最终不应被理解成：
 
 """
 
-from __future__ import annotations
-
 from copy import deepcopy
 
 
@@ -517,8 +517,11 @@ class GameEngine:
 
             profile = c.get("agent_profile", {})
             actors[c["id"]] = {
+                "id": c["id"],
                 "location": c["location"],
                 "present": True,
+                "stats": deepcopy(c["stats"]),
+                "skills": deepcopy(c.get("skills", {})),
                 "goals": deepcopy(profile.get("goals", [])),
                 "beliefs": deepcopy(profile.get("beliefs", [])),
                 "emotion": deepcopy(profile.get("emotion", {"state": "平静"})),
@@ -528,6 +531,17 @@ class GameEngine:
                 "memory": [],
             }
         return actors
+
+    def _initial_entities(self):
+        """Copy L2 object definitions into independent mutable L3 entities."""
+        entities = {}
+        for definition in self.assets.objects():
+            entity = deepcopy(definition)
+            entity.setdefault("holder", None)
+            entity.setdefault("contained_in", None)
+            entity.setdefault("contents", [])
+            entities[entity["id"]] = entity
+        return entities
 
     def create_state(self, player_character):
         scene = self.assets.scene()
@@ -548,6 +562,8 @@ class GameEngine:
             "turn": 0,
             "player": player,
             "actors": self._initial_actors(player["id"]),
+            "entities": self._initial_entities(),
+            "world_time": {"elapsed_minutes": 0},
             "events": [
                 f"{player['name']}进入{scene['name']}"
             ],

@@ -71,7 +71,7 @@ class CharacterFactory:
             "background": "玩家自建角色。背景在后续版本继续扩展。",
             "assets": [],
             "inventory": [],
-            "skills": [],
+            "skills": {},
             "stats": stats,
             "extraordinary_traits": [],
             "status": {"injured": False},

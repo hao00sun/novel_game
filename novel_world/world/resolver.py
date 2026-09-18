@@ -343,9 +343,45 @@ from .models import Outcome
 
 
 class WorldResolver:
-    def __init__(self, assets, tools):
+    def __init__(self, assets, tools, skill_system=None):
         self.assets = assets
         self.tools = tools
+        self.skill_system = skill_system
+
+    def _resolve_skill_observations(self, state, location):
+        """Expose authored L2 observations according to L4 skill evaluations."""
+        if self.skill_system is None:
+            return [], []
+
+        observations = []
+        checks = []
+        for definition in location.get("skill_observations", []):
+            evaluation = self.skill_system.evaluate(
+                state["player"],
+                definition["skill_id"],
+                definition["difficulty"],
+                definition.get("context_modifiers"),
+            )
+            checks.append(evaluation.to_dict())
+            authored = definition["observations"]
+            observations.append(authored.get(evaluation.grade, authored["default"]))
+        return observations, checks
+
+    def _resolve_reachable_destination(self, state, scene, destination):
+        dest = destination
+        if dest not in scene["allowed_location_ids"]:
+            loc = self.assets.find_location_by_name(dest or "")
+            if loc:
+                dest = loc["id"]
+
+        if dest not in scene["allowed_location_ids"]:
+            raise ValueError(
+                "该地点不属于当前澄源县 Scene；当前城外仅开放山林。"
+            )
+
+        if not self.assets.is_location_reachable(state["player"]["location"], dest):
+            raise ValueError("当前地点与目标地点之间没有已定义的可达路径。")
+        return dest
 
     def resolve(self, state, intent, npc_proposal=None) -> Outcome:
         world = self.assets.world()
@@ -362,18 +398,12 @@ class WorldResolver:
 
         # 2. Move
         if intent.kind == "move":
-            dest = intent.destination
-
-            if dest not in scene["allowed_location_ids"]:
-                loc = self.assets.find_location_by_name(dest or "")
-                if loc:
-                    dest = loc["id"]
-
-            if dest not in scene["allowed_location_ids"]:
-                return Outcome(
-                    ok=False,
-                    message="该地点不属于当前新手县城 Scene，v0.3 暂不允许离开县城。"
+            try:
+                dest = self._resolve_reachable_destination(
+                    state, scene, intent.destination
                 )
+            except ValueError as e:
+                return Outcome(ok=False, message=str(e))
 
             result = self.tools.move(state, dest)
             return Outcome(
@@ -399,19 +429,22 @@ class WorldResolver:
                 return Outcome(ok=False, message="该目标当前不是可交互 NPC。")
 
             if runtime_target.get("location") != state["player"]["location"]:
-                if (
-                    intent.destination
-                    and intent.destination in scene["allowed_location_ids"]
-                    and runtime_target.get("location") == intent.destination
-                ):
-                    move_result = self.tools.move(state, intent.destination)
+                try:
+                    destination = self._resolve_reachable_destination(
+                        state, scene, intent.destination
+                    )
+                except ValueError as e:
+                    return Outcome(ok=False, message=str(e))
+
+                if runtime_target.get("location") == destination:
+                    move_result = self.tools.move(state, destination)
                     changes.extend(move_result["state_changes"])
                     events.extend(move_result["events"])
 
                     # Validate talk against a temporary state view, not by mutating state.
                     temp_state = {
                         **state,
-                        "player": {**state["player"], "location": intent.destination}
+                        "player": {**state["player"], "location": destination}
                     }
                     try:
                         result = self.tools.talk(temp_state, intent.target)
@@ -457,12 +490,18 @@ class WorldResolver:
         if intent.kind == "inspect":
             info = self.tools.inspect(state)
             people = "、".join(info["people"]) if info["people"] else "暂未发现明确人物"
+            location = self.assets.get_location(state["player"]["location"])
+            observations, skill_checks = self._resolve_skill_observations(state, location)
+            observation_text = ""
+            if observations:
+                observation_text = "\n" + "\n".join(f"你注意到：{item}" for item in observations)
             return Outcome(
                 ok=True,
                 message=(
                     f"【{info['location']}】{info['description']}\n"
-                    f"当前可见人物：{people}"
-                )
+                    f"当前可见人物：{people}{observation_text}"
+                ),
+                skill_checks=skill_checks,
             )
 
         # 5. Free-form:

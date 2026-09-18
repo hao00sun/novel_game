@@ -45,11 +45,10 @@
         "猎刀",
         "旧斗笠"
       ],
-      "skills": [
-        "追踪",
-        "辨认常见野兽",
-        "基础弓术"
-      ],
+      "skills": {
+        "tracking": 4,
+        "archery": 3
+      },
       "stats": {
         "physique": 7,
         "agility": 7,
@@ -105,11 +104,11 @@
         "小剪",
         "手抄药方"
       ],
-      "skills": [
-        "辨药",
-        "基础包扎",
-        "观察病症"
-      ],
+      "skills": {
+        "herbalism": 4,
+        "medicine": 3,
+        "literacy": 2
+      },
       "stats": {
         "physique": 3,
         "agility": 5,
@@ -166,11 +165,10 @@
         "旧书两册",
         "铜钱少许"
       ],
-      "skills": [
-        "识字",
-        "文书",
-        "基础算术"
-      ],
+      "skills": {
+        "literacy": 4,
+        "numeracy": 3
+      },
       "stats": {
         "physique": 3,
         "agility": 4,
@@ -226,11 +224,9 @@
         "围裙",
         "工具箱"
       ],
-      "skills": [
-        "打铁",
-        "修理铁器",
-        "估算材料"
-      ],
+      "skills": {
+        "metalworking": 4
+      },
       "stats": {
         "physique": 8,
         "agility": 4,
@@ -285,11 +281,10 @@
         "零钱匣",
         "账簿"
       ],
-      "skills": [
-        "察言观色",
-        "议价",
-        "收集街坊消息"
-      ],
+      "skills": {
+        "social_insight": 4,
+        "negotiation": 3
+      },
       "stats": {
         "physique": 4,
         "agility": 5,
@@ -345,11 +340,9 @@
         "草绳",
         "旧布包"
       ],
-      "skills": [
-        "搬运",
-        "认路",
-        "市井打听"
-      ],
+      "skills": {
+        "social_insight": 2
+      },
       "stats": {
         "physique": 8,
         "agility": 6,
@@ -401,11 +394,11 @@
       "location": "yamen_square",
       "background": "澄源县地方主官。v0.1 仅作为官府秩序的象征性 NPC。",
       "assets": [],
-      "skills": [
-        "行政",
-        "文书",
-        "地方治理"
-      ],
+      "skills": {
+        "literacy": 4,
+        "social_insight": 3,
+        "negotiation": 3
+      },
       "stats": {
         "physique": 3,
         "agility": 3,
@@ -457,11 +450,11 @@
       "location": "yamen_square",
       "background": "协助维持县衙日常秩序。v0.1 不开放其官府内部行为。",
       "assets": [],
-      "skills": [
-        "文书",
-        "治安事务",
-        "盘问"
-      ],
+      "skills": {
+        "literacy": 3,
+        "social_insight": 3,
+        "negotiation": 2
+      },
       "stats": {
         "physique": 5,
         "agility": 4,

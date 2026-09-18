@@ -1,0 +1,95 @@
+{
+  "skills": [
+    {
+      "id": "tracking",
+      "name": "追踪",
+      "category": "cognitive",
+      "applicable_tools": ["inspect", "search"],
+      "related_stats": {"perception": 0.7, "intellect": 0.3},
+      "trained_only": false,
+      "knowledge_domains": ["野外痕迹", "动物踪迹"],
+      "effects": {"observation": "improves trace interpretation"}
+    },
+    {
+      "id": "archery",
+      "name": "弓术",
+      "category": "physical",
+      "applicable_tools": ["aim", "attack"],
+      "related_stats": {"agility": 0.6, "perception": 0.4},
+      "trained_only": false,
+      "knowledge_domains": ["弓具", "射击姿势"],
+      "effects": {"combat": "supports future ranged resolution"}
+    },
+    {
+      "id": "herbalism",
+      "name": "草药学",
+      "category": "cognitive",
+      "applicable_tools": ["inspect", "use"],
+      "related_stats": {"perception": 0.6, "intellect": 0.4},
+      "trained_only": false,
+      "knowledge_domains": ["常见药材", "药材状态"],
+      "effects": {"observation": "improves herb identification"}
+    },
+    {
+      "id": "medicine",
+      "name": "基础医术",
+      "category": "cognitive",
+      "applicable_tools": ["inspect", "use"],
+      "related_stats": {"intellect": 0.6, "perception": 0.4},
+      "trained_only": false,
+      "knowledge_domains": ["基础包扎", "常见病症"],
+      "effects": {"treatment": "supports future treatment resolution"}
+    },
+    {
+      "id": "literacy",
+      "name": "识字文书",
+      "category": "cognitive",
+      "applicable_tools": ["read", "write"],
+      "related_stats": {"intellect": 0.8, "perception": 0.2},
+      "trained_only": true,
+      "knowledge_domains": ["文字", "文书"],
+      "effects": {"information": "supports future document interpretation"}
+    },
+    {
+      "id": "numeracy",
+      "name": "算术",
+      "category": "cognitive",
+      "applicable_tools": [],
+      "related_stats": {"intellect": 0.9, "perception": 0.1},
+      "trained_only": false,
+      "knowledge_domains": ["账目", "数量"],
+      "effects": {"calculation": "supports future trade resolution"}
+    },
+    {
+      "id": "metalworking",
+      "name": "铁器技艺",
+      "category": "craft",
+      "applicable_tools": ["inspect", "use", "repair"],
+      "related_stats": {"physique": 0.3, "intellect": 0.3, "perception": 0.4},
+      "trained_only": false,
+      "knowledge_domains": ["铁器", "材料", "修理"],
+      "effects": {"craft": "supports future repair resolution"}
+    },
+    {
+      "id": "social_insight",
+      "name": "察言观色",
+      "category": "social_cognitive",
+      "applicable_tools": ["look", "listen", "talk"],
+      "related_stats": {"perception": 0.5, "social": 0.3, "intellect": 0.2},
+      "trained_only": false,
+      "knowledge_domains": ["外部举止", "语气"],
+      "effects": {"observation": "supports future observable social evidence"}
+    },
+    {
+      "id": "negotiation",
+      "name": "交涉议价",
+      "category": "social",
+      "applicable_tools": ["speak", "trade"],
+      "related_stats": {"social": 0.7, "intellect": 0.2, "will": 0.1},
+      "trained_only": false,
+      "knowledge_domains": ["议价", "交涉"],
+      "effects": {"social": "supports future trade and persuasion resolution"}
+    }
+  ],
+  "_meta": {"layer": "L2", "mutability": "persistent_definition"}
+}
