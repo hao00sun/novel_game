@@ -1,12 +1,16 @@
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from novel_world.assets.loader import AssetLoader
 from novel_world.characters.factory import CharacterFactory
 from novel_world.world.constitution import WorldConstitution
 from novel_world.agents.intent import IntentAgent
 from novel_world.agents.character import CharacterAgent
+from novel_world.agents.narrator import Narrator
+from novel_world.engine import GameEngine
 from novel_world.infrastructure.llm import MockProvider
+from novel_world.infrastructure.storage import JsonStore
 from novel_world.world.tools import ToolRegistry
 from novel_world.world.resolver import WorldResolver
 from novel_world.world.state_manager import StateManager
@@ -63,6 +67,29 @@ class V03IntegrationTests(unittest.TestCase):
 
         new_state = StateManager().apply(self.state, outcome)
         self.assertEqual(new_state["player"]["location"], "herbal_shop")
+
+    def test_engine_can_commit_forest_movement(self):
+        player = CharacterFactory(self.assets.characters_bundle()).from_preset(
+            self.assets.get_character("lu_chen")
+        )
+        with TemporaryDirectory() as temp_dir:
+            engine = GameEngine(
+                constitution=self.constitution,
+                assets=self.assets,
+                intent_agent=IntentAgent(self.assets, self.llm, self.constitution),
+                character_agent=CharacterAgent(self.assets, self.llm, self.constitution),
+                resolver=WorldResolver(self.assets, ToolRegistry(self.assets)),
+                state_manager=StateManager(),
+                narrator=Narrator(self.assets, self.llm, self.constitution),
+                store=JsonStore(Path(temp_dir) / "save.json"),
+            )
+            initial_state = engine.create_state(player)
+            self.assertIn("east_gate_notice", initial_state["entities"])
+            self.assertEqual(initial_state["world_time"]["elapsed_minutes"], 0)
+            _, outcome, state, _ = engine.step("去山林")
+
+        self.assertTrue(outcome.ok)
+        self.assertEqual(state["player"]["location"], "forest")
 
 
 if __name__ == "__main__":

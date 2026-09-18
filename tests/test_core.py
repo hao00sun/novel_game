@@ -9,6 +9,7 @@ from novel_world.infrastructure.llm import MockProvider
 from novel_world.world.tools import ToolRegistry
 from novel_world.world.resolver import WorldResolver
 from novel_world.world.state_manager import StateManager
+from novel_world.world.models import Intent
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,6 +78,24 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(state["player"]["location"], "east_gate")
         new_state = StateManager().apply(state, outcome)
         self.assertEqual(new_state["player"]["location"], "herbal_shop")
+
+    def test_forest_is_the_only_open_outside_location(self):
+        player = self.factory.from_preset(self.assets.get_character("lu_chen"))
+        state = {"player": player, "events": [], "turn": 0}
+
+        intent = IntentAgent(self.assets, MockProvider()).interpret("去山林", state)
+        outcome = self.resolver.resolve(state, intent)
+
+        self.assertTrue(outcome.ok)
+        self.assertEqual(StateManager().apply(state, outcome)["player"]["location"], "forest")
+        self.assertTrue(self.assets.is_location_reachable("east_gate", "forest"))
+
+        rejected = self.resolver.resolve(
+            state,
+            Intent(kind="move", raw_text="去村庄", destination="village"),
+        )
+        self.assertFalse(rejected.ok)
+        self.assertIn("仅开放山林", rejected.message)
 
 
 if __name__ == "__main__":
