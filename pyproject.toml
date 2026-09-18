@@ -3,6 +3,16 @@ name = "novel-world"
 version = "0.3.0"
 description = "Asset-driven interactive narrative world with API-powered intent, character and narration agents."
 requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

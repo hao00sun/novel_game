@@ -400,6 +400,37 @@ Schedule
 
 ---
 
+## Development / 开发环境
+
+Windows PowerShell：
+
+```powershell
+py -V:3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
+不依赖 pytest 的测试方式：
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+如果 PowerShell 阻止 `Activate.ps1`，可执行：
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+也可以不激活虚拟环境，直接运行：
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+---
+
 # 正在建设
 
 当前重点正在从：
