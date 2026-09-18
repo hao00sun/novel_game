@@ -1,0 +1,51 @@
+{
+  "factions": [
+    {
+      "id": "county_yamen",
+      "name": "县衙体系",
+      "members": ["县令", "书吏", "捕头", "衙役"],
+      "resources": ["治安", "税粮", "案件", "政令"],
+      "constraints": ["财政", "人情", "乡绅合作"]
+    },
+    {
+      "id": "local_gentry",
+      "name": "乡绅地主",
+      "members": ["大户", "族长", "地主", "读书人家族"],
+      "resources": ["土地", "粮食", "声望", "地方影响力"],
+      "constraints": ["名声", "官府态度", "佃户稳定"]
+    },
+    {
+      "id": "merchant_network",
+      "name": "商人与商会",
+      "members": ["粮商", "布商", "药商", "车行", "客栈"],
+      "resources": ["商路", "库存", "银钱", "信息"],
+      "constraints": ["道路安全", "价格", "信用"]
+    },
+    {
+      "id": "commoners",
+      "name": "普通百姓",
+      "members": ["农民", "猎户", "铁匠", "学徒", "脚夫"],
+      "resources": ["生计", "家庭", "安全", "机会"],
+      "constraints": ["粮价", "工作", "疾病", "治安"]
+    },
+    {
+      "id": "gray_network",
+      "name": "灰色势力",
+      "members": ["地痞", "私商", "小偷", "掮客"],
+      "resources": ["非正式渠道", "暴力", "人情债"],
+      "constraints": ["官府压力", "利润", "地盘"]
+    },
+    {
+      "id": "outsiders",
+      "name": "流民与外来者",
+      "members": ["逃荒者", "商旅", "游民", "陌生匠人"],
+      "resources": ["劳力", "消息", "潜在冲突"],
+      "constraints": ["食物", "落脚处", "身份安全"]
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition",
+    "status": "placeholder_not_loaded_by_runtime"
+  }
+}

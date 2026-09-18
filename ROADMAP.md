@@ -37,6 +37,9 @@
 - [ ] Character Action → Event
 - [ ] Impact Radius
 - [ ] Information Spread
+- [ ] Time System / World Tick
+- [ ] Event templates → L3 Runtime Events
+- [ ] Rumor propagation
 
 ---
 
@@ -47,3 +50,4 @@
 - [ ] Network Position
 - [ ] Social Gravity
 - [ ] Strategy Attractors
+- [ ] State-based probability resolution

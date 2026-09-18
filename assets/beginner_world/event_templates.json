@@ -1,0 +1,37 @@
+{
+  "initial_condition_templates": [
+    {
+      "id": "poor_harvest",
+      "summary": "城外部分村庄收成低于往年，农户开始提前出售存粮。"
+    },
+    {
+      "id": "grain_caravan_delayed",
+      "summary": "一支原定返回的运粮商队迟迟没有抵达。"
+    },
+    {
+      "id": "displaced_people_arrive",
+      "summary": "北方流民增加，东门检查比以往更严格。"
+    },
+    {
+      "id": "register_review",
+      "summary": "县衙准备重新核对粮册与税册。"
+    },
+    {
+      "id": "road_bandit_rumor",
+      "summary": "官道附近出现山匪传闻，来源尚未证实。"
+    }
+  ],
+  "templates": [
+    {
+      "id": "grain_supply_pressure",
+      "preconditions": ["grain_caravan_delayed", "poor_harvest"],
+      "candidate_effects": ["grain_price_rises", "theft_risk_increases"],
+      "follow_up_templates": ["patrols_increase", "underground_trade_expands"]
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition",
+    "status": "placeholder_not_loaded_by_runtime"
+  }
+}

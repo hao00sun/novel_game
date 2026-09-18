@@ -81,6 +81,8 @@ L2 Character Asset 保存初始人物定义。
 ```text
 actors[id]
 ├── location
+├── stats
+├── skills
 ├── goals
 ├── beliefs
 ├── emotion
@@ -143,7 +145,8 @@ novel_world/
 ├── assets/
 │   └── loader.py            # L1/L2 世界资产只读入口
 ├── characters/
-│   └── factory.py           # 预设 / 自建玩家角色构造
+│   ├── factory.py           # 预设 / 自建玩家角色构造
+│   └── skills/              # L4 技能能力评估，不直接修改世界
 └── infrastructure/
     ├── llm.py               # LLM Provider 适配
     ├── storage.py           # Runtime State 持久化

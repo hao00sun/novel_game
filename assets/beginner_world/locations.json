@@ -14,6 +14,14 @@
         "东门",
         "城门",
         "东城门"
+      ],
+      "connections": [
+        "market",
+        "forest"
+      ],
+      "scene_rules": [
+        "公开通行区域，衙役可见。",
+        "城外移动当前只能通往附近山林。"
       ]
     },
     {
@@ -30,6 +38,18 @@
         "市集",
         "集市",
         "市场"
+      ],
+      "connections": [
+        "east_gate",
+        "inn",
+        "herbal_shop",
+        "smithy",
+        "tea_stall",
+        "temple",
+        "yamen_square"
+      ],
+      "scene_rules": [
+        "公开且拥挤；小额纠纷通常会被旁人观察。"
       ]
     },
     {
@@ -45,6 +65,12 @@
       "aliases": [
         "客栈",
         "顺来客栈"
+      ],
+      "connections": [
+        "market"
+      ],
+      "scene_rules": [
+        "客栈对外来人开放，但住宿与雇佣尚未实现。"
       ]
     },
     {
@@ -60,6 +86,23 @@
         "药铺",
         "济生药铺",
         "药店"
+      ],
+      "connections": [
+        "market"
+      ],
+      "scene_rules": [
+        "店铺内可交谈与观察；交易和治疗仍待对应 Tool。"
+      ],
+      "skill_observations": [
+        {
+          "skill_id": "herbalism",
+          "difficulty": 2.8,
+          "observations": {
+            "default": "架上摆着一些晒干的药材。",
+            "competent": "你辨出其中有金银花和黄芩等常见药材。",
+            "strong": "你辨出其中有金银花和黄芩，且一批金银花干燥得当、色泽尚新。"
+          }
+        }
       ]
     },
     {
@@ -76,6 +119,12 @@
         "铁铺",
         "铁匠铺",
         "赵家铁铺"
+      ],
+      "connections": [
+        "market"
+      ],
+      "scene_rules": [
+        "生产场所；修理、定制与购买仍待对应 Tool。"
       ]
     },
     {
@@ -90,6 +139,12 @@
       "aliases": [
         "茶摊",
         "柳娘茶摊"
+      ],
+      "connections": [
+        "market"
+      ],
+      "scene_rules": [
+        "公开社交节点；传闻系统尚未启用。"
       ]
     },
     {
@@ -104,6 +159,13 @@
       "aliases": [
         "城隍庙",
         "庙"
+      ],
+      "connections": [
+        "market",
+        "yamen_square"
+      ],
+      "scene_rules": [
+        "公共祭祀场所；当前不包含超自然效果。"
       ]
     },
     {
@@ -121,6 +183,49 @@
         "县衙前",
         "县衙前广场",
         "衙门"
+      ],
+      "connections": [
+        "market",
+        "temple"
+      ],
+      "scene_rules": [
+        "县衙内部未开放；公开冲突的社会成本更高。"
+      ]
+    },
+    {
+      "id": "forest",
+      "name": "城外山林",
+      "type": "wilderness",
+      "description": "东门外不远的丘陵山林。猎户、采药人与普通野兽偶尔出没，视野受限且秩序较弱。",
+      "tags": [
+        "野外",
+        "采药",
+        "狩猎",
+        "风险"
+      ],
+      "aliases": [
+        "山林",
+        "树林",
+        "城外山林",
+        "山里"
+      ],
+      "connections": [
+        "east_gate"
+      ],
+      "scene_rules": [
+        "当前世界仍遵循现实规则，不启用超凡力量。",
+        "狩猎、采药、追踪和野外事件仍待对应 Tool 与 Event System。"
+      ],
+      "skill_observations": [
+        {
+          "skill_id": "tracking",
+          "difficulty": 2.5,
+          "observations": {
+            "default": "地面有些杂乱痕迹。",
+            "competent": "你分辨出其中夹杂着较新的兽蹄印。",
+            "strong": "你分辨出其中夹杂着较新的兽蹄印，并能大致判断它们向东北侧林坡延伸。"
+          }
+        }
       ]
     }
   ],

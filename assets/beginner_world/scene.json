@@ -1,9 +1,9 @@
 {
   "scene_id": "chengyuan_county_beginner_scene",
-  "name": "澄源县·新手县城",
-  "scope_type": "bounded_town",
+  "name": "澄源县·县城与城外山林",
+  "scope_type": "bounded_town_and_wilderness",
   "world_id": "beginner_human_world",
-  "description": "一座抽象化明末风格的小县城。当前所有交互均限制在县城范围内。",
+  "description": "一座抽象化明末风格的小县城，当前可从东门进入附近山林。",
   "entry_location": "east_gate",
   "allowed_location_ids": [
     "east_gate",
@@ -13,10 +13,11 @@
     "smithy",
     "tea_stall",
     "temple",
-    "yamen_square"
+    "yamen_square",
+    "forest"
   ],
   "boundaries": [
-    "玩家不能离开县城进入外部世界。",
+    "玩家离开县城时当前只能前往东门外山林；村庄、官道和其他外部区域尚未开放。",
     "县衙内部暂未开放，只能在县衙前广场活动。",
     "当前不模拟战争、国家政治和跨区域经济。",
     "当前不提供超凡力量。",

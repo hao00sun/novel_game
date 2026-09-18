@@ -1,0 +1,19 @@
+{
+  "templates": [
+    {
+      "id": "road_bandit_rumor",
+      "source_event": "road_bandit_rumor",
+      "audiences": ["merchant_network", "commoners", "outsiders"],
+      "variants": [
+        "有人在官道附近见过持械者。",
+        "也有人认为只是流民抢劫。"
+      ]
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition",
+    "status": "placeholder_not_loaded_by_runtime",
+    "note": "Runtime rumor propagation, confidence and character belief updates belong to future L3 systems."
+  }
+}

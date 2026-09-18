@@ -1,0 +1,47 @@
+{
+  "objects": [
+    {
+      "id": "east_gate_notice",
+      "name": "东门告示",
+      "location": "east_gate",
+      "portable": false,
+      "readable": true,
+      "content": "东门外山林可通行，远路与村庄暂不开放。",
+      "tags": ["文字", "东门", "边界提示"]
+    },
+    {
+      "id": "fallen_branch",
+      "name": "枯木枝",
+      "location": "forest",
+      "portable": true,
+      "equippable": true,
+      "affordances": ["strike", "push", "pull"],
+      "tags": ["山林", "简易工具"]
+    },
+    {
+      "id": "blank_paper",
+      "name": "空白纸页",
+      "location": "east_gate",
+      "portable": true,
+      "readable": true,
+      "writable": true,
+      "content": "",
+      "tags": ["文字", "可书写"]
+    },
+    {
+      "id": "inn_wooden_box",
+      "name": "客栈木箱",
+      "location": "inn",
+      "portable": false,
+      "openable": true,
+      "is_open": false,
+      "container": true,
+      "contents": [],
+      "tags": ["客栈", "容器"]
+    }
+  ],
+  "_meta": {
+    "layer": "L2",
+    "mutability": "persistent_definition"
+  }
+}
