@@ -15,6 +15,8 @@ from ..infrastructure.storage import JsonStore
 from ..world.constitution import WorldConstitution
 from ..world.resolver import WorldResolver
 from ..world.state_manager import StateManager
+from ..world.action_validator import ActionValidator
+from ..world.tool_schema import ToolSchema
 from ..world.tools import ToolRegistry
 
 
@@ -42,12 +44,20 @@ def build_engine():
     assets = AssetLoader(ASSET_DIR)
     llm = build_llm()
     tools = ToolRegistry(assets)
+    action_schema = ToolSchema.from_registry(tools)
+    action_validator = ActionValidator(action_schema)
     skill_system = CharacterSkillSystem(assets.skills())
 
     engine = GameEngine(
         constitution=constitution,
         assets=assets,
-        intent_agent=IntentAgent(assets, llm, constitution),
+        intent_agent=IntentAgent(
+            assets,
+            llm,
+            constitution,
+            action_schema=action_schema,
+            action_validator=action_validator,
+        ),
         character_agent=CharacterAgent(assets, llm, constitution),
         resolver=WorldResolver(assets, tools, skill_system),
         state_manager=StateManager(),

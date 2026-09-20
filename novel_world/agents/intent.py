@@ -578,8 +578,8 @@ from __future__ import annotations
 import json
 
 from ..infrastructure.llm import MockProvider
-from ..world.models import Intent
-from .prompts import INTENT_SYSTEM
+from ..world.models import ActionAtom, ActionBundle, Intent
+from .prompts import ACTION_SYSTEM, INTENT_SYSTEM
 
 
 EXTRAORDINARY_WORDS = [
@@ -589,10 +589,123 @@ EXTRAORDINARY_WORDS = [
 
 
 class IntentAgent:
-    def __init__(self, assets, llm, constitution=None):
+    def __init__(
+        self,
+        assets,
+        llm,
+        constitution=None,
+        action_schema=None,
+        action_validator=None,
+    ):
         self.assets = assets
         self.llm = llm
         self.constitution = constitution
+        self.action_schema = action_schema
+        self.action_validator = action_validator
+
+    def interpret_actions(self, text: str, state: dict) -> ActionBundle:
+        """Parse and validate L4 candidate actions without touching the legacy Intent path."""
+        if self.action_schema is None or self.action_validator is None:
+            return ActionBundle(
+                raw_text=text,
+                actions=[],
+                ambiguities=["Action parsing is not configured."],
+            )
+        if isinstance(self.llm, MockProvider):
+            return ActionBundle(
+                raw_text=text,
+                actions=[],
+                ambiguities=["Action parsing requires an LLM provider."],
+            )
+
+        reference_context, reference_ids = self._build_action_reference_context(state)
+        payload = {
+            "player_text": text,
+            "tool_schema": self.action_schema.to_prompt_data(),
+            "reference_context": reference_context,
+        }
+        try:
+            data = self.llm.json(
+                system=ACTION_SYSTEM,
+                user=json.dumps(payload, ensure_ascii=False, indent=2),
+                temperature=0.1,
+            )
+        except Exception as error:
+            return ActionBundle(
+                raw_text=text,
+                actions=[],
+                ambiguities=[f"Action parsing failed: {type(error).__name__}."],
+            )
+
+        return self._validated_action_bundle(text, data, reference_ids)
+
+    def _build_action_reference_context(self, state: dict):
+        current_location = state["player"]["location"]
+        player_id = state["player"].get("id")
+        locations = [
+            {"id": location["id"], "name": location["name"], "type": "location"}
+            for location in self.assets.locations()
+        ]
+        characters = []
+        for character_id, actor in state.get("actors", {}).items():
+            if actor.get("present", True) and actor.get("location") == current_location:
+                asset = self.assets.get_character(character_id)
+                characters.append({"id": character_id, "name": asset["name"], "type": "character"})
+        entities = [
+            {"id": entity_id, "name": entity.get("name", entity_id), "type": "entity"}
+            for entity_id, entity in state.get("entities", {}).items()
+            if (
+                entity.get("holder") == player_id
+                or (
+                    entity.get("location") == current_location
+                    and not entity.get("holder")
+                    and not entity.get("contained_in")
+                )
+            )
+        ]
+        context = {"locations": locations, "characters": characters, "entities": entities}
+        reference_ids = {item["id"] for group in context.values() for item in group}
+        return context, reference_ids
+
+    def _validated_action_bundle(self, text, data, reference_ids) -> ActionBundle:
+        if not isinstance(data, dict) or not isinstance(data.get("actions", []), list):
+            return ActionBundle(text, [], ["Action parser returned malformed actions."])
+
+        ambiguities = [item for item in data.get("ambiguities", []) if isinstance(item, str)]
+        actions = []
+        for index, raw_action in enumerate(data["actions"]):
+            if not isinstance(raw_action, dict) or not isinstance(raw_action.get("tool"), str):
+                ambiguities.append(f"Action {index + 1} is malformed.")
+                continue
+            action = ActionAtom(
+                tool=raw_action["tool"],
+                args=raw_action.get("args", {}),
+                desired_outcome=raw_action.get("desired_outcome"),
+                raw_text=raw_action.get("raw_text"),
+            )
+            validation = self.action_validator.validate(action)
+            if not validation.ok:
+                ambiguities.extend(validation.errors)
+                continue
+            reference_errors = self._validate_action_references(action, reference_ids)
+            if reference_errors:
+                ambiguities.extend(reference_errors)
+                continue
+            actions.append(action)
+        return ActionBundle(raw_text=text, actions=actions, ambiguities=ambiguities)
+
+    @staticmethod
+    def _validate_action_references(action: ActionAtom, reference_ids: set[str]):
+        """Check only explicit *_id references; Tool preconditions remain elsewhere."""
+        errors = []
+        for argument_name, value in action.args.items():
+            if argument_name.endswith("_id") and (
+                not isinstance(value, str) or value not in reference_ids
+            ):
+                errors.append(
+                    f"Unknown reference for {argument_name}: {value!r}."
+                )
+        return errors
 
     def interpret(self, text: str, state: dict) -> Intent:
         if isinstance(self.llm, MockProvider):
