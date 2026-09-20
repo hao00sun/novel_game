@@ -1,5 +1,5 @@
 '''
-本文件决定各组件之间用什么格式传递信息，目前只定义了三个核心数据结构：Intent、CharacterProposal、Outcome
+本文件决定各组件之间用什么格式传递信息。
 1、可能传递的信息不够丰富？
 2、可能数据接口种类不够？
 3、“裁决”有些可能不是单纯的bool决定
@@ -24,6 +24,31 @@ class Intent:
     speech: str | None = None
     desired_outcome: str | None = None
     extraordinary: bool = False
+
+    def to_dict(self):
+        return asdict(self)
+
+
+@dataclass
+class ActionAtom:
+    """One player-declared candidate Tool call; it has no State authority."""
+
+    tool: str
+    args: dict[str, Any] = field(default_factory=dict)
+    desired_outcome: str | None = None
+    raw_text: str | None = None
+
+    def to_dict(self):
+        return asdict(self)
+
+
+@dataclass
+class ActionBundle:
+    """Ordered decomposition of only the actions stated by the player."""
+
+    raw_text: str
+    actions: list[ActionAtom]
+    ambiguities: list[str] = field(default_factory=list)
 
     def to_dict(self):
         return asdict(self)
