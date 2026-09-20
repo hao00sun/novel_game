@@ -81,6 +81,7 @@ def main():
         f"v{constitution.manifest['version']}"
     )
     print(f"LLM Provider: {llm.provider_name}")
+    print("配置 Provider：python -m novel_world --configure")
 
     if not SAVE_PATH.exists():
         player = choose_character(assets)
