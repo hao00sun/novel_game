@@ -27,6 +27,12 @@ class StateManager:
     }
 
     def apply(self, state, outcome):
+        new_state = self.preview(state, outcome)
+        new_state["turn"] = new_state.get("turn", 0) + 1
+        return new_state
+
+    def preview(self, state, outcome):
+        """Apply confirmed candidates to an isolated temporary state without a turn commit."""
         new_state = deepcopy(state)
 
         for change in outcome.state_changes:
@@ -35,8 +41,6 @@ class StateManager:
 
         if outcome.events:
             new_state.setdefault("events", []).extend(outcome.events)
-
-        new_state["turn"] = new_state.get("turn", 0) + 1
         return new_state
 
     def _validate_path(self, path):

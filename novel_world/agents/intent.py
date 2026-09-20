@@ -605,6 +605,12 @@ class IntentAgent:
 
     def interpret_actions(self, text: str, state: dict) -> ActionBundle:
         """Parse and validate L4 candidate actions without touching the legacy Intent path."""
+        if any(word in text for word in EXTRAORDINARY_WORDS):
+            return ActionBundle(
+                raw_text=text,
+                actions=[],
+                ambiguities=["超凡尝试保留给 Legacy Resolver 的世界规则检查。"],
+            )
         if self.action_schema is None or self.action_validator is None:
             return ActionBundle(
                 raw_text=text,
@@ -708,6 +714,8 @@ class IntentAgent:
         return errors
 
     def interpret(self, text: str, state: dict) -> Intent:
+        if any(word in text for word in EXTRAORDINARY_WORDS):
+            return self._fallback(text)
         if isinstance(self.llm, MockProvider):
             return self._fallback(text)
 

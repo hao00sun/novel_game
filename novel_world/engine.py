@@ -485,6 +485,8 @@ GameEngine 最终不应被理解成：
 
 from copy import deepcopy
 
+from .world.models import Intent
+
 
 class GameEngine:
     def __init__(
@@ -578,22 +580,27 @@ class GameEngine:
     def step(self, text):
         state = self.get_state()
 
-        # L4
-        intent = self.intent_agent.interpret(text, state)
-
-        npc_proposal = None
-        if intent.kind == "talk" and intent.target:
-            npc_proposal = self.character_agent.react(
-                intent.target,
-                state,
-                intent
-            )
-
-        outcome = self.resolver.resolve(
-            state,
-            intent,
-            npc_proposal=npc_proposal,
+        bundle = self.intent_agent.interpret_actions(text, state)
+        uses_action_path = bool(bundle.actions) and not any(
+            action.tool == "talk" for action in bundle.actions
         )
+        if uses_action_path:
+            intent = Intent(kind="action_bundle", raw_text=text)
+            outcome = self.resolver.resolve_actions(state, bundle)
+        else:
+            intent = self.intent_agent.interpret(text, state)
+            npc_proposal = None
+            if intent.kind == "talk" and intent.target:
+                npc_proposal = self.character_agent.react(
+                    intent.target,
+                    state,
+                    intent
+                )
+            outcome = self.resolver.resolve(
+                state,
+                intent,
+                npc_proposal=npc_proposal,
+            )
 
         new_state = self.state_manager.apply(state, outcome)
 
@@ -601,6 +608,7 @@ class GameEngine:
             "turn": new_state["turn"],
             "player_text": text,
             "intent": intent.to_dict(),
+            "action_bundle": bundle.to_dict() if uses_action_path else None,
             "outcome": outcome.to_dict(),
         })
         new_state["history"] = new_state["history"][-30:]

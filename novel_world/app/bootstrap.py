@@ -16,6 +16,7 @@ from ..world.constitution import WorldConstitution
 from ..world.resolver import WorldResolver
 from ..world.state_manager import StateManager
 from ..world.action_validator import ActionValidator
+from ..world.tool_dispatcher import ToolDispatcher
 from ..world.tool_schema import ToolSchema
 from ..world.tools import ToolRegistry
 
@@ -46,7 +47,9 @@ def build_engine():
     tools = ToolRegistry(assets)
     action_schema = ToolSchema.from_registry(tools)
     action_validator = ActionValidator(action_schema)
+    action_dispatcher = ToolDispatcher(tools, action_schema, action_validator)
     skill_system = CharacterSkillSystem(assets.skills())
+    state_manager = StateManager()
 
     engine = GameEngine(
         constitution=constitution,
@@ -59,8 +62,14 @@ def build_engine():
             action_validator=action_validator,
         ),
         character_agent=CharacterAgent(assets, llm, constitution),
-        resolver=WorldResolver(assets, tools, skill_system),
-        state_manager=StateManager(),
+        resolver=WorldResolver(
+            assets,
+            tools,
+            skill_system,
+            action_dispatcher=action_dispatcher,
+            state_manager=state_manager,
+        ),
+        state_manager=state_manager,
         narrator=Narrator(assets, llm, constitution),
         store=JsonStore(SAVE_PATH),
     )

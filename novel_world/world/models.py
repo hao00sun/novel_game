@@ -78,6 +78,8 @@ class Outcome:
     npc_proposal: dict[str, Any] | None = None
     rejected_claims: list[str] = field(default_factory=list)
     skill_checks: list[dict[str, Any]] = field(default_factory=list)
+    action_results: list[dict[str, Any]] = field(default_factory=list)
+    unresolved_requests: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self):
         return asdict(self)

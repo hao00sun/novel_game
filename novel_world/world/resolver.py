@@ -339,14 +339,24 @@ Resolver 不应该发展成：
 
 from __future__ import annotations
 
-from .models import Outcome
+from .models import ActionAtom, ActionBundle, Outcome
+from .state_manager import StateManager
 
 
 class WorldResolver:
-    def __init__(self, assets, tools, skill_system=None):
+    def __init__(
+        self,
+        assets,
+        tools,
+        skill_system=None,
+        action_dispatcher=None,
+        state_manager=None,
+    ):
         self.assets = assets
         self.tools = tools
         self.skill_system = skill_system
+        self.action_dispatcher = action_dispatcher
+        self.state_manager = state_manager or StateManager()
 
     def _resolve_skill_observations(self, state, location):
         """Expose authored L2 observations according to L4 skill evaluations."""
@@ -382,6 +392,124 @@ class WorldResolver:
         if not self.assets.is_location_reachable(state["player"]["location"], dest):
             raise ValueError("当前地点与目标地点之间没有已定义的可达路径。")
         return dest
+
+    def _resolve_scene_inspect(self, state) -> Outcome:
+        info = self.tools.inspect(state)
+        people = "、".join(info["people"]) if info["people"] else "暂未发现明确人物"
+        location = self.assets.get_location(state["player"]["location"])
+        observations, skill_checks = self._resolve_skill_observations(state, location)
+        observation_text = ""
+        if observations:
+            observation_text = "\n" + "\n".join(f"你注意到：{item}" for item in observations)
+        return Outcome(
+            ok=True,
+            message=(
+                f"【{info['location']}】{info['description']}\n"
+                f"当前可见人物：{people}{observation_text}"
+            ),
+            skill_checks=skill_checks,
+        )
+
+    def resolve_actions(self, state, bundle: ActionBundle) -> Outcome:
+        """Resolve a validated ActionBundle sequentially without directly mutating L3."""
+        if self.action_dispatcher is None:
+            return Outcome(ok=False, message="Action Dispatcher 尚未配置。")
+        if not bundle.actions:
+            return Outcome(
+                ok=False,
+                message="没有可执行的 Action。",
+                rejected_claims=list(bundle.ambiguities),
+            )
+
+        temporary_state = state
+        messages = []
+        state_changes = []
+        events = []
+        skill_checks = []
+        action_results = []
+        unresolved_requests = []
+        rejected_claims = list(bundle.ambiguities)
+        all_ok = True
+
+        for action in bundle.actions:
+            action_outcome = self._resolve_action_atom(temporary_state, action)
+            action_results.append({
+                "action": action.to_dict(),
+                "ok": action_outcome.ok,
+                "message": action_outcome.message,
+                "state_changes": action_outcome.state_changes,
+                "events": action_outcome.events,
+                "skill_checks": action_outcome.skill_checks,
+                "unresolved_requests": action_outcome.unresolved_requests,
+            })
+            messages.append(action_outcome.message)
+            state_changes.extend(action_outcome.state_changes)
+            events.extend(action_outcome.events)
+            skill_checks.extend(action_outcome.skill_checks)
+            unresolved_requests.extend(action_outcome.unresolved_requests)
+            rejected_claims.extend(action_outcome.rejected_claims)
+
+            if not action_outcome.ok:
+                all_ok = False
+                break
+            temporary_state = self.state_manager.preview(temporary_state, action_outcome)
+
+        return Outcome(
+            ok=all_ok,
+            message="\n".join(message for message in messages if message),
+            state_changes=state_changes,
+            events=events,
+            rejected_claims=rejected_claims,
+            skill_checks=skill_checks,
+            action_results=action_results,
+            unresolved_requests=unresolved_requests,
+        )
+
+    def _resolve_action_atom(self, state, action: ActionAtom) -> Outcome:
+        if action.tool == "move":
+            try:
+                destination = self._resolve_reachable_destination(
+                    state,
+                    self.assets.scene(),
+                    action.args["destination_id"],
+                )
+            except (KeyError, ValueError) as error:
+                return Outcome(ok=False, message=str(error))
+            action = ActionAtom(
+                tool=action.tool,
+                args={**action.args, "destination_id": destination},
+                desired_outcome=action.desired_outcome,
+                raw_text=action.raw_text,
+            )
+
+        if action.tool == "inspect" and not action.args.get("target"):
+            return self._resolve_scene_inspect(state)
+        if action.tool == "talk":
+            return Outcome(
+                ok=False,
+                message="交谈仍由 Legacy Intent + CharacterAgent 路径处理。",
+            )
+
+        try:
+            result = self.action_dispatcher.dispatch(state, action)
+        except (KeyError, TypeError, ValueError) as error:
+            return Outcome(ok=False, message=str(error))
+
+        unresolved_requests = [
+            {"type": "perception", "request": request}
+            for request in result.get("perception_requests", [])
+        ]
+        unresolved_requests.extend(
+            {"type": "action", "request": request}
+            for request in result.get("action_requests", [])
+        )
+        return Outcome(
+            ok=True,
+            message=result["message"],
+            state_changes=result.get("state_changes", []),
+            events=result.get("events", []),
+            unresolved_requests=unresolved_requests,
+        )
 
     def resolve(self, state, intent, npc_proposal=None) -> Outcome:
         world = self.assets.world()
@@ -488,21 +616,7 @@ class WorldResolver:
 
         # 4. Inspect
         if intent.kind == "inspect":
-            info = self.tools.inspect(state)
-            people = "、".join(info["people"]) if info["people"] else "暂未发现明确人物"
-            location = self.assets.get_location(state["player"]["location"])
-            observations, skill_checks = self._resolve_skill_observations(state, location)
-            observation_text = ""
-            if observations:
-                observation_text = "\n" + "\n".join(f"你注意到：{item}" for item in observations)
-            return Outcome(
-                ok=True,
-                message=(
-                    f"【{info['location']}】{info['description']}\n"
-                    f"当前可见人物：{people}{observation_text}"
-                ),
-                skill_checks=skill_checks,
-            )
+            return self._resolve_scene_inspect(state)
 
         # 5. Free-form:
         # record attempt, but do not fabricate a result.
