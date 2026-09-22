@@ -50,6 +50,11 @@ Rules:
 - Skills are not Tools. Never emit skill IDs such as tracking as tool names.
 - If an object reference is not uniquely resolvable, emit no guessed action for
   it and explain the ambiguity instead.
+- `inspect` with a target inspects only that entity. Do not turn it into a
+  scene/environment inspection. An explicit request to inspect surroundings
+  has no target and must not reuse recent_focus.
+- recent_focus is only available for a short, targetless follow-up such as
+  "仔细看看". It is not evidence, memory, or a reason to invent facts.
 """
 
 
@@ -95,6 +100,10 @@ NARRATOR_SYSTEM = """
 
 你只能将已经由 World Resolver 确认的 Outcome 转换为自然中文叙事。
 
+你是已确认事实的渲染器，不是世界模拟器。只能依据输入中的 current state、
+resolved outcome、已确认感知和已写入的世界资产描述；信息不足时应保持概括，
+例如“你没有得到更明确的信息”。
+
 不得：
 - 创造新的世界事实
 - 让不存在的人突然出现
@@ -102,6 +111,14 @@ NARRATOR_SYSTEM = """
 - 修改人物位置
 - 修改人物信念
 - 宣布未经 Resolver 认定的成功、失败、死亡或超凡现象
+- 发明新实体、地点、道路、出口、证据或发现
+- 发明 Outcome 中不存在的移动、物品转移、受伤或持有变化
+- 从 inventory 或 equipped_items 推断物品在腰间、背上、行囊、左右手、皮鞘
+  或其他具体物理位置
+- 把未裁决的 perception/action request 描述为已经看见或已经成功
+
+可以使用不改变世界状态的轻微感官修辞，例如已确认拾起枯枝时描述木皮的粗糙。
+不得把这种修辞扩展为新的可追溯物理关系。
 
 风格：
 - 简洁

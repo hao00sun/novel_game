@@ -106,6 +106,7 @@ class ToolRegistry:
     def inspect(self, state, target=None):
         """Keep the old no-target scene inspection API for the existing Resolver."""
         if target is not None:
+            self._visible_entity(state, target)
             return self._result("你开始仔细观察目标。", perception_requests=[{"kind": "inspect", "target": target}])
 
         loc = self.assets.get_location(self._player(state)["location"])

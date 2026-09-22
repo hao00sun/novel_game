@@ -573,6 +573,7 @@ class GameEngine:
             "actors": self._initial_actors(player["id"]),
             "entities": self._initial_entities(),
             "world_time": {"elapsed_minutes": 0},
+            "interaction": {"last_focus_entity_id": None},
             "events": [
                 f"{player['name']}进入{scene['name']}"
             ],

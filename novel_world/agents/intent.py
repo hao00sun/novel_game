@@ -587,6 +587,9 @@ EXTRAORDINARY_WORDS = [
     "瞬移", "读心", "隐身", "妖术", "神通", "灵力"
 ]
 
+FOCUS_FOLLOWUP_TEXTS = {"仔细看看", "再看看", "看看它", "检查一下它"}
+INVENTORY_OVERVIEW_MARKERS = ("自身装备", "携带的装备", "身上有什么")
+
 
 class IntentAgent:
     def __init__(
@@ -617,6 +620,8 @@ class IntentAgent:
                 actions=[],
                 ambiguities=["Action parsing is not configured."],
             )
+        if self._is_inventory_overview(text):
+            return ActionBundle(raw_text=text, actions=[])
         if isinstance(self.llm, MockProvider):
             return ActionBundle(
                 raw_text=text,
@@ -625,6 +630,21 @@ class IntentAgent:
             )
 
         reference_context, reference_ids = self._build_action_reference_context(state)
+        if self._is_focus_followup(text):
+            focus = reference_context["recent_focus"]
+            if focus is None:
+                return ActionBundle(
+                    raw_text=text,
+                    actions=[],
+                    ambiguities=["最近关注的目标当前不可引用。"],
+                )
+            action = ActionAtom(tool="inspect", args={"target": focus["id"]})
+            validation = self.action_validator.validate(action)
+            return ActionBundle(
+                raw_text=text,
+                actions=[action] if validation.ok else [],
+                ambiguities=validation.errors,
+            )
         payload = {
             "player_text": text,
             "tool_schema": self.action_schema.to_prompt_data(),
@@ -677,9 +697,39 @@ class IntentAgent:
                     "type": "entity",
                     "relation": "scene",
                 })
-        context = {"locations": locations, "characters": characters, "entities": entities}
-        reference_ids = {item["id"] for group in context.values() for item in group}
+        focus_id = state.get("interaction", {}).get("last_focus_entity_id")
+        recent_focus = next(
+            (entity for entity in entities if entity["id"] == focus_id),
+            None,
+        )
+        context = {
+            "locations": locations,
+            "characters": characters,
+            "entities": entities,
+            "recent_focus": recent_focus,
+        }
+        reference_ids = {
+            item["id"]
+            for group in (locations, characters, entities)
+            for item in group
+        }
         return context, reference_ids
+
+    @staticmethod
+    def _normalized_text(text: str) -> str:
+        return "".join(char for char in text.strip() if not char.isspace() and char not in "，。！？、")
+
+    @classmethod
+    def _is_focus_followup(cls, text: str) -> bool:
+        return cls._normalized_text(text) in FOCUS_FOLLOWUP_TEXTS
+
+    @classmethod
+    def _is_inventory_overview(cls, text: str) -> bool:
+        normalized = cls._normalized_text(text)
+        return (
+            any(marker in normalized for marker in INVENTORY_OVERVIEW_MARKERS)
+            or ("自身状态" in normalized and "装备" in normalized)
+        )
 
     def _validated_action_bundle(self, text, data, reference_ids) -> ActionBundle:
         if not isinstance(data, dict) or not isinstance(data.get("actions", []), list):
@@ -724,6 +774,12 @@ class IntentAgent:
     def interpret(self, text: str, state: dict) -> Intent:
         if any(word in text for word in EXTRAORDINARY_WORDS):
             return self._fallback(text)
+        if self._is_inventory_overview(text):
+            return Intent(kind="inventory_overview", raw_text=text)
+        if self._is_focus_followup(text):
+            reference_context, _ = self._build_action_reference_context(state)
+            if reference_context["recent_focus"] is None:
+                return Intent(kind="freeform", raw_text=text)
         if isinstance(self.llm, MockProvider):
             return self._fallback(text)
 

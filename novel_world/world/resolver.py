@@ -407,7 +407,33 @@ class WorldResolver:
                 f"【{info['location']}】{info['description']}\n"
                 f"当前可见人物：{people}{observation_text}"
             ),
+            state_changes=[self._focus_change(None)],
             skill_checks=skill_checks,
+        )
+
+    @staticmethod
+    def _focus_change(entity_id):
+        return {
+            "path": "interaction.last_focus_entity_id",
+            "value": entity_id,
+            "cause": {"mechanism": "perception_focus"},
+        }
+
+    def _resolve_inventory_overview(self, state) -> Outcome:
+        player = state["player"]
+        entities = state["entities"]
+
+        def names(item_ids):
+            return "、".join(entities[item_id]["name"] for item_id in item_ids) or "无"
+
+        return Outcome(
+            ok=True,
+            message=(
+                f"当前携带：{names(player['inventory'])}\n"
+                f"当前手持：{names(player['held_items'])}\n"
+                f"当前装备：{names(player['equipped_items'])}"
+            ),
+            state_changes=[self._focus_change(None)],
         )
 
     def resolve_actions(self, state, bundle: ActionBundle) -> Outcome:
@@ -506,7 +532,10 @@ class WorldResolver:
         return Outcome(
             ok=True,
             message=result["message"],
-            state_changes=result.get("state_changes", []),
+            state_changes=[
+                *result.get("state_changes", []),
+                *([self._focus_change(action.args["target"])] if action.tool == "inspect" else []),
+            ],
             events=result.get("events", []),
             unresolved_requests=unresolved_requests,
         )
@@ -617,6 +646,9 @@ class WorldResolver:
         # 4. Inspect
         if intent.kind == "inspect":
             return self._resolve_scene_inspect(state)
+
+        if intent.kind == "inventory_overview":
+            return self._resolve_inventory_overview(state)
 
         # 5. Free-form:
         # record attempt, but do not fabricate a result.
