@@ -33,6 +33,9 @@ class ToolRegistryTests(unittest.TestCase):
             entity.setdefault("holder", None)
             entity.setdefault("contained_in", None)
             entity.setdefault("contents", [])
+        for object_id in player["inventory"]:
+            self.state["entities"][object_id]["holder"] = player["id"]
+            self.state["entities"][object_id]["location"] = None
 
     def commit(self, result):
         outcome = Outcome(

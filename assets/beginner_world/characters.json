@@ -41,9 +41,9 @@
       "location": "east_gate",
       "background": "自小在县城附近山林讨生活，熟悉野外痕迹与普通弓猎技巧。",
       "assets": [
-        "短弓",
-        "猎刀",
-        "旧斗笠"
+        "lu_chen_short_bow",
+        "lu_chen_hunting_knife",
+        "lu_chen_old_hat"
       ],
       "skills": {
         "tracking": 4,
@@ -100,9 +100,9 @@
       "location": "herbal_shop",
       "background": "在济生药铺学徒数年，识得常见药材，也经常接触县民日常疾苦。",
       "assets": [
-        "药囊",
-        "小剪",
-        "手抄药方"
+        "shen_qinghe_medicine_pouch",
+        "shen_qinghe_small_scissors",
+        "shen_qinghe_hand_copied_prescription"
       ],
       "skills": {
         "herbalism": 4,
@@ -161,9 +161,9 @@
       "location": "tea_stall",
       "background": "家境清贫，读过多年书，尚未取得官身，以替人写信和抄书补贴生计。",
       "assets": [
-        "笔墨",
-        "旧书两册",
-        "铜钱少许"
+        "zhou_yan_writing_set",
+        "zhou_yan_old_books",
+        "zhou_yan_coin_pouch"
       ],
       "skills": {
         "literacy": 4,
@@ -220,9 +220,9 @@
       "location": "smithy",
       "background": "赵家铁铺的年轻掌炉人，性子直接，靠修农具和打铁养家。",
       "assets": [
-        "铁锤",
-        "围裙",
-        "工具箱"
+        "zhao_shi_iron_hammer",
+        "zhao_shi_apron",
+        "zhao_shi_toolbox"
       ],
       "skills": {
         "metalworking": 4
@@ -277,9 +277,9 @@
       "location": "tea_stall",
       "background": "在市集旁经营茶摊多年，认识的人多，知道的闲话也多。",
       "assets": [
-        "茶摊",
-        "零钱匣",
-        "账簿"
+        "liu_sanniang_tea_stall",
+        "liu_sanniang_cash_box",
+        "liu_sanniang_ledger"
       ],
       "skills": {
         "social_insight": 4,
@@ -336,9 +336,9 @@
       "location": "market",
       "background": "常替商户搬货跑腿，对县城道路、人情和各家店铺都较熟。",
       "assets": [
-        "扁担",
-        "草绳",
-        "旧布包"
+        "han_ping_shoulder_pole",
+        "han_ping_rope",
+        "han_ping_cloth_bag"
       ],
       "skills": {
         "social_insight": 2

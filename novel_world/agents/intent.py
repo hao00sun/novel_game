@@ -657,18 +657,26 @@ class IntentAgent:
             if actor.get("present", True) and actor.get("location") == current_location:
                 asset = self.assets.get_character(character_id)
                 characters.append({"id": character_id, "name": asset["name"], "type": "character"})
-        entities = [
-            {"id": entity_id, "name": entity.get("name", entity_id), "type": "entity"}
-            for entity_id, entity in state.get("entities", {}).items()
-            if (
-                entity.get("holder") == player_id
-                or (
-                    entity.get("location") == current_location
-                    and not entity.get("holder")
-                    and not entity.get("contained_in")
-                )
-            )
-        ]
+        entities = []
+        for entity_id, entity in state.get("entities", {}).items():
+            if entity.get("holder") == player_id:
+                entities.append({
+                    "id": entity_id,
+                    "name": entity.get("name", entity_id),
+                    "type": "entity",
+                    "relation": "inventory",
+                })
+            elif (
+                entity.get("location") == current_location
+                and not entity.get("holder")
+                and not entity.get("contained_in")
+            ):
+                entities.append({
+                    "id": entity_id,
+                    "name": entity.get("name", entity_id),
+                    "type": "entity",
+                    "relation": "scene",
+                })
         context = {"locations": locations, "characters": characters, "entities": entities}
         reference_ids = {item["id"] for group in context.values() for item in group}
         return context, reference_ids

@@ -38,6 +38,138 @@
       "container": true,
       "contents": [],
       "tags": ["客栈", "容器"]
+    },
+    {
+      "id": "lu_chen_short_bow",
+      "name": "短弓",
+      "portable": true,
+      "equippable": true,
+      "affordances": ["strike"],
+      "tags": ["猎户", "武器"]
+    },
+    {
+      "id": "lu_chen_hunting_knife",
+      "name": "猎刀",
+      "portable": true,
+      "equippable": true,
+      "affordances": ["strike"],
+      "tags": ["猎户", "工具"]
+    },
+    {
+      "id": "lu_chen_old_hat",
+      "name": "旧斗笠",
+      "portable": true,
+      "equippable": true,
+      "tags": ["猎户", "衣物"]
+    },
+    {
+      "id": "shen_qinghe_medicine_pouch",
+      "name": "药囊",
+      "portable": true,
+      "container": true,
+      "contents": [],
+      "tags": ["药铺", "容器"]
+    },
+    {
+      "id": "shen_qinghe_small_scissors",
+      "name": "小剪",
+      "portable": true,
+      "tags": ["药铺", "工具"]
+    },
+    {
+      "id": "shen_qinghe_hand_copied_prescription",
+      "name": "手抄药方",
+      "portable": true,
+      "readable": true,
+      "content": "一份常用药方的手抄本。",
+      "tags": ["药铺", "文字"]
+    },
+    {
+      "id": "zhou_yan_writing_set",
+      "name": "笔墨",
+      "portable": true,
+      "tags": ["读书人", "文具"]
+    },
+    {
+      "id": "zhou_yan_old_books",
+      "name": "旧书两册",
+      "portable": true,
+      "readable": true,
+      "content": "两册翻旧的杂书。",
+      "tags": ["读书人", "文字"]
+    },
+    {
+      "id": "zhou_yan_coin_pouch",
+      "name": "铜钱少许",
+      "portable": true,
+      "tags": ["读书人", "钱财"]
+    },
+    {
+      "id": "zhao_shi_iron_hammer",
+      "name": "铁锤",
+      "portable": true,
+      "equippable": true,
+      "affordances": ["strike"],
+      "tags": ["铁匠", "工具"]
+    },
+    {
+      "id": "zhao_shi_apron",
+      "name": "围裙",
+      "portable": true,
+      "equippable": true,
+      "tags": ["铁匠", "衣物"]
+    },
+    {
+      "id": "zhao_shi_toolbox",
+      "name": "工具箱",
+      "portable": true,
+      "container": true,
+      "contents": [],
+      "tags": ["铁匠", "容器"]
+    },
+    {
+      "id": "liu_sanniang_tea_stall",
+      "name": "茶摊",
+      "portable": false,
+      "tags": ["茶摊", "营生"]
+    },
+    {
+      "id": "liu_sanniang_cash_box",
+      "name": "零钱匣",
+      "portable": true,
+      "container": true,
+      "contents": [],
+      "tags": ["茶摊", "容器"]
+    },
+    {
+      "id": "liu_sanniang_ledger",
+      "name": "账簿",
+      "portable": true,
+      "readable": true,
+      "writable": true,
+      "content": "茶摊的日常收支记录。",
+      "tags": ["茶摊", "文字"]
+    },
+    {
+      "id": "han_ping_shoulder_pole",
+      "name": "扁担",
+      "portable": true,
+      "equippable": true,
+      "tags": ["脚夫", "工具"]
+    },
+    {
+      "id": "han_ping_rope",
+      "name": "草绳",
+      "portable": true,
+      "tags": ["脚夫", "工具"]
+    },
+    {
+      "id": "han_ping_cloth_bag",
+      "name": "旧布包",
+      "portable": true,
+      "container": true,
+      "contents": [],
+      "tags": ["脚夫", "容器"]
     }
   ],
   "_meta": {

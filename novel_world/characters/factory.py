@@ -29,6 +29,8 @@ class CharacterFactory:
         runtime = deepcopy(asset)
         runtime["source"] = "preset"
         runtime["inventory"] = list(asset.get("assets", []))
+        runtime["held_items"] = []
+        runtime["equipped_items"] = []
         runtime["status"] = {"injured": False}
         return runtime
 
@@ -71,6 +73,8 @@ class CharacterFactory:
             "background": "玩家自建角色。背景在后续版本继续扩展。",
             "assets": [],
             "inventory": [],
+            "held_items": [],
+            "equipped_items": [],
             "skills": {},
             "stats": stats,
             "extraordinary_traits": [],

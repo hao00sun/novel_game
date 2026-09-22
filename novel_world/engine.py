@@ -522,6 +522,9 @@ class GameEngine:
                 "id": c["id"],
                 "location": c["location"],
                 "present": True,
+                "inventory": list(c.get("assets", [])),
+                "held_items": [],
+                "equipped_items": [],
                 "stats": deepcopy(c["stats"]),
                 "skills": deepcopy(c.get("skills", {})),
                 "goals": deepcopy(profile.get("goals", [])),
@@ -543,6 +546,10 @@ class GameEngine:
             entity.setdefault("contained_in", None)
             entity.setdefault("contents", [])
             entities[entity["id"]] = entity
+        for character in self.assets.characters():
+            for object_id in character.get("assets", []):
+                entities[object_id]["holder"] = character["id"]
+                entities[object_id]["location"] = None
         return entities
 
     def create_state(self, player_character):
@@ -571,11 +578,79 @@ class GameEngine:
             ],
             "history": [],
         }
+        self._validate_runtime_item_references(state)
         self.store.save(state)
         return state
 
     def get_state(self):
-        return self.store.load()
+        state = self.store.load()
+        self._validate_runtime_item_references(state)
+        return state
+
+    @staticmethod
+    def _invalid_save(detail):
+        raise ValueError(f"存档物品格式不兼容：{detail}。请执行 /reset 重新创建角色。")
+
+    def _validate_runtime_item_references(self, state):
+        if not isinstance(state, dict):
+            self._invalid_save("Runtime State 不是对象")
+        entities = state.get("entities")
+        actors = state.get("actors")
+        player = state.get("player")
+        if not isinstance(entities, dict) or not isinstance(actors, dict) or not isinstance(player, dict):
+            self._invalid_save("缺少 Runtime Entity、玩家或角色数据")
+        if any(not isinstance(entity, dict) for entity in entities.values()):
+            self._invalid_save("包含格式错误的 Runtime Entity")
+        if any(not isinstance(actor, dict) for actor in actors.values()):
+            self._invalid_save("包含格式错误的 Runtime NPC")
+
+        owners = [player, *actors.values()]
+        owner_ids = set()
+        owners_by_id = {}
+        for owner in owners:
+            owner_id = owner.get("id")
+            if not isinstance(owner_id, str) or owner_id in owner_ids:
+                self._invalid_save("角色 id 缺失或重复")
+            owner_ids.add(owner_id)
+            owners_by_id[owner_id] = owner
+            inventory = owner.get("inventory")
+            held_items = owner.get("held_items")
+            equipped_items = owner.get("equipped_items")
+            if not all(isinstance(items, list) for items in (inventory, held_items, equipped_items)):
+                self._invalid_save(f"{owner_id} 缺少物品集合")
+            for field_name, items in {
+                "inventory": inventory,
+                "held_items": held_items,
+                "equipped_items": equipped_items,
+            }.items():
+                if any(not isinstance(item_id, str) or item_id not in entities for item_id in items):
+                    self._invalid_save(f"{owner_id} {field_name} 含有无效物品引用")
+                if len(items) != len(set(items)):
+                    self._invalid_save(f"{owner_id} {field_name} 含有重复物品引用")
+            if not set(held_items).issubset(inventory) or not set(equipped_items).issubset(inventory):
+                self._invalid_save(f"{owner_id} 的 held_items 或 equipped_items 不属于 inventory")
+            if any(entities[item_id].get("holder") != owner_id for item_id in inventory):
+                self._invalid_save(f"{owner_id} inventory 与 Entity holder 不一致")
+
+        for entity_id, entity in entities.items():
+            holder = entity.get("holder")
+            if holder is not None and holder not in owner_ids:
+                self._invalid_save(f"Entity {entity_id} 的 holder 无效")
+            if holder is not None and entity_id not in owners_by_id[holder]["inventory"]:
+                self._invalid_save(f"Entity {entity_id} 的 holder 与 inventory 不一致")
+            contained_in = entity.get("contained_in")
+            if contained_in is not None and (
+                not isinstance(contained_in, str) or contained_in not in entities
+            ):
+                self._invalid_save(f"Entity {entity_id} 的容器引用无效")
+            contents = entity.get("contents", [])
+            if not isinstance(contents, list) or any(
+                not isinstance(item_id, str) or item_id not in entities
+                for item_id in contents
+            ):
+                self._invalid_save(f"Entity {entity_id} 的 contents 含有无效引用")
+            if any(entities[item_id].get("contained_in") != entity_id for item_id in contents):
+                self._invalid_save(f"Entity {entity_id} 的 contents 与 Entity 容器关系不一致")
 
     def step(self, text):
         state = self.get_state()

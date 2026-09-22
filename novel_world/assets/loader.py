@@ -15,6 +15,7 @@ class AssetLoader:
     def __init__(self, asset_dir: str | Path):
         self.asset_dir = Path(asset_dir)
         self._validate_skill_assets()
+        self._validate_object_assets()
 
     def _load(self, filename: str) -> dict[str, Any]:
         path = self.asset_dir / filename
@@ -87,6 +88,30 @@ class AssetLoader:
                     raise ValueError(f"Character {character['id']} uses unknown skill: {skill_id}")
                 if not isinstance(level, int) or isinstance(level, bool) or not 0 <= level <= 5:
                     raise ValueError(f"Character {character['id']} skill {skill_id} must be 0~5.")
+
+    def _validate_object_assets(self):
+        object_list = self.objects()
+        if any(not isinstance(item.get("id"), str) or not item["id"] for item in object_list):
+            raise ValueError("Object definitions require non-empty string ids.")
+        objects = {item["id"]: item for item in object_list}
+        if len(objects) != len(object_list):
+            raise ValueError("Object definitions require unique non-empty ids.")
+
+        owned_ids = set()
+        for character in self.characters():
+            asset_ids = character.get("assets", [])
+            if not isinstance(asset_ids, list):
+                raise ValueError(f"Character {character['id']} assets must be a list of object ids.")
+            for object_id in asset_ids:
+                if not isinstance(object_id, str) or object_id not in objects:
+                    raise ValueError(
+                        f"Character {character['id']} references unknown object: {object_id!r}"
+                    )
+                if object_id in owned_ids:
+                    raise ValueError(f"Object {object_id} has more than one initial owner.")
+                if objects[object_id].get("location") is not None:
+                    raise ValueError(f"Character-owned object {object_id} cannot also be a scene object.")
+                owned_ids.add(object_id)
 
     def is_location_reachable(self, source_id: str, destination_id: str) -> bool:
         """Return whether the static L2 location graph contains a route."""

@@ -76,7 +76,7 @@ class ToolRegistry:
     def _held_entity(self, state, entity_id):
         entity = self._entity(state, entity_id)
         player = self._player(state)
-        if entity.get("holder") != player.get("id") or entity_id not in player.get("held_items", []):
+        if entity.get("holder") != player["id"] or entity_id not in player["held_items"]:
             raise ValueError(f"你当前没有正拿着{entity.get('name', entity_id)}。")
         return entity
 
@@ -164,8 +164,8 @@ class ToolRegistry:
             self._change(f"entities.{object_id}.holder", player["id"], "take"),
             self._change(f"entities.{object_id}.location", None, "take"),
             self._change(f"entities.{object_id}.contained_in", None, "take"),
-            self._change("player.inventory", self._with_item(player.get("inventory", []), object_id), "take"),
-            *self._player_item_changes(state, held=self._with_item(player.get("held_items", []), object_id)),
+            self._change("player.inventory", self._with_item(player["inventory"], object_id), "take"),
+            *self._player_item_changes(state, held=self._with_item(player["held_items"], object_id)),
         ]
         if entity.get("contained_in"):
             container_id = entity["contained_in"]
@@ -188,11 +188,11 @@ class ToolRegistry:
             state_changes=[
                 self._change(f"entities.{object_id}.holder", None, "release"),
                 self._change(f"entities.{object_id}.location", player["location"], "release"),
-                self._change("player.inventory", self._without_item(player.get("inventory", []), object_id), "release"),
+                self._change("player.inventory", self._without_item(player["inventory"], object_id), "release"),
                 *self._player_item_changes(
                     state,
-                    held=self._without_item(player.get("held_items", []), object_id),
-                    equipped=self._without_item(player.get("equipped_items", []), object_id),
+                    held=self._without_item(player["held_items"], object_id),
+                    equipped=self._without_item(player["equipped_items"], object_id),
                 ),
             ],
         )
@@ -204,11 +204,11 @@ class ToolRegistry:
             self._change(f"entities.{object_id}.holder", None, "place"),
             self._change(f"entities.{object_id}.location", player["location"], "place"),
             self._change(f"entities.{object_id}.contained_in", None, "place"),
-            self._change("player.inventory", self._without_item(player.get("inventory", []), object_id), "place"),
+            self._change("player.inventory", self._without_item(player["inventory"], object_id), "place"),
             *self._player_item_changes(
                 state,
-                held=self._without_item(player.get("held_items", []), object_id),
-                equipped=self._without_item(player.get("equipped_items", []), object_id),
+                held=self._without_item(player["held_items"], object_id),
+                equipped=self._without_item(player["equipped_items"], object_id),
             ),
         ]
         if destination not in {"ground", "地上", "地面"}:
@@ -232,9 +232,9 @@ class ToolRegistry:
             state_changes=[
                 self._change(f"entities.{object_id}.holder", target_id, "transfer"),
                 self._change(f"entities.{object_id}.location", None, "transfer"),
-                self._change("player.inventory", self._without_item(player.get("inventory", []), object_id), "transfer"),
-                self._change(f"actors.{target_id}.inventory", self._with_item(actor.get("inventory", []), object_id), "transfer"),
-                *self._player_item_changes(state, held=self._without_item(player.get("held_items", []), object_id)),
+                self._change("player.inventory", self._without_item(player["inventory"], object_id), "transfer"),
+                self._change(f"actors.{target_id}.inventory", self._with_item(actor["inventory"], object_id), "transfer"),
+                *self._player_item_changes(state, held=self._without_item(player["held_items"], object_id)),
             ],
         )
 
@@ -267,13 +267,13 @@ class ToolRegistry:
     def equip(self, state, object_id):
         entity = self._entity(state, object_id)
         player = self._player(state)
-        if object_id not in player.get("inventory", []) or entity.get("holder") != player.get("id"):
+        if object_id not in player["inventory"] or entity.get("holder") != player["id"]:
             raise ValueError(f"你当前没有持有{entity.get('name', object_id)}。")
         if not entity.get("equippable", False):
             raise ValueError(f"{entity.get('name', object_id)}不能装备。")
         return self._result(
             f"你装备了{entity.get('name', object_id)}。",
-            state_changes=self._player_item_changes(state, equipped=self._with_item(player.get("equipped_items", []), object_id)),
+            state_changes=self._player_item_changes(state, equipped=self._with_item(player["equipped_items"], object_id)),
         )
 
     def store(self, state, object_id, container_id):
@@ -291,11 +291,11 @@ class ToolRegistry:
                 self._change(f"entities.{object_id}.location", player["location"], "store"),
                 self._change(f"entities.{object_id}.contained_in", container_id, "store"),
                 self._change(f"entities.{container_id}.contents", self._with_item(container.get("contents", []), object_id), "store"),
-                self._change("player.inventory", self._without_item(player.get("inventory", []), object_id), "store"),
+                self._change("player.inventory", self._without_item(player["inventory"], object_id), "store"),
                 *self._player_item_changes(
                     state,
-                    held=self._without_item(player.get("held_items", []), object_id),
-                    equipped=self._without_item(player.get("equipped_items", []), object_id),
+                    held=self._without_item(player["held_items"], object_id),
+                    equipped=self._without_item(player["equipped_items"], object_id),
                 ),
             ],
         )

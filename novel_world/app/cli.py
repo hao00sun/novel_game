@@ -88,10 +88,15 @@ def main():
         state = engine.create_state(player)
         print(f"\n已创建角色：{player['name']}（{player['identity']}）")
     else:
-        state = engine.get_state()
-        print(
-            f"已读取存档：{state['player']['name']}（{state['player']['identity']}）"
-        )
+        try:
+            state = engine.get_state()
+            print(
+                f"已读取存档：{state['player']['name']}（{state['player']['identity']}）"
+            )
+        except ValueError as error:
+            state = None
+            print(f"\n{error}")
+            print("请输入 /reset 删除旧存档后重新创建角色，或输入 quit 退出。")
 
     print("\n命令：")
     print("  /where     当前地点")
@@ -118,14 +123,20 @@ def main():
         if text in {"quit", "exit"}:
             break
 
-        state = engine.get_state()
-
         if text == "/where":
+            if state is None:
+                print("当前存档不兼容，请先输入 /reset。")
+                continue
+            state = engine.get_state()
             loc = assets.get_location(state["player"]["location"])
             print(f"{loc['name']}：{loc['description']}")
             continue
 
         if text == "/people":
+            if state is None:
+                print("当前存档不兼容，请先输入 /reset。")
+                continue
+            state = engine.get_state()
             here = state["player"]["location"]
             found = []
             for actor_id, actor in state.get("actors", {}).items():
@@ -140,10 +151,18 @@ def main():
             continue
 
         if text == "/me":
+            if state is None:
+                print("当前存档不兼容，请先输入 /reset。")
+                continue
+            state = engine.get_state()
             print(json.dumps(state["player"], ensure_ascii=False, indent=2))
             continue
 
         if text == "/state":
+            if state is None:
+                print("当前存档不兼容，请先输入 /reset。")
+                continue
+            state = engine.get_state()
             summary = {
                 "turn": state["turn"],
                 "player_location": state["player"]["location"],
@@ -156,6 +175,10 @@ def main():
             engine.store.delete()
             print("存档已删除。重新运行即可重新创建角色。")
             break
+
+        if state is None:
+            print("当前存档不兼容，请先输入 /reset。")
+            continue
 
         intent, outcome, new_state, narrative = engine.step(text)
 
